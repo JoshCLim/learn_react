@@ -20,8 +20,10 @@ function App() {
         id: newTaskId(),
         name: newTask,
         complete: false,
+        importance: 0,
       },
     ]);
+    setNewTask("");
   };
 
   // generate a new unique task id
@@ -29,7 +31,7 @@ function App() {
     if (tasks.length === 0) {
       return 1;
     } else {
-      return tasks[tasks.length - 1].id + 1;
+      return tasks[0].id + 1;
     }
   };
 
@@ -37,24 +39,26 @@ function App() {
     setTasks(tasks.filter((value) => value.id !== taskId));
   };
 
-  const markComplete = (taskId) => {
+  const toggleComplete = (taskId) => {
     setTasks(
       tasks.map((value) => {
         if (value.id === taskId) {
-          value.complete = true;
+          value.complete = !value.complete;
         }
         return value;
       })
     );
   };
 
+  // console.log(tasks);
+
   return (
     <div className="App">
       <div className="container">
-        <div className="addTask">
+        <div className="addTaskWrapper">
           <input
             className="addTaskInput"
-            placeholder="task name"
+            placeholder="new todo"
             type="text"
             onChange={handleChange}
           />
@@ -64,15 +68,23 @@ function App() {
         </div>
 
         <div className="list">
-          {tasks.map((value, index) => (
-            <Task
-              name={value.name}
-              id={value.id}
-              complete={value.complete}
-              deleteTask={deleteTask}
-              markComplete={markComplete}
-            />
-          ))}
+          {tasks
+            .sort((a, b) => {
+              if (b.importance - a.importance !== 0) {
+                return b.importance - a.importance;
+              }
+              return b.id - a.id;
+            })
+            .map((value, index) => (
+              <Task
+                name={value.name}
+                id={value.id}
+                complete={value.complete}
+                importance={value.importance}
+                deleteTask={deleteTask}
+                toggleComplete={toggleComplete}
+              />
+            ))}
         </div>
       </div>
     </div>

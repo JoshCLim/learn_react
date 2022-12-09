@@ -10,6 +10,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  background-color: #151515;
+  color: #fff;
 }
 
 .container {
@@ -22,13 +25,29 @@
   padding: 40px 0;
   font-size: 24px;
   border-radius: 20px;
-  box-shadow: 3px 3px 10px #ddd;
+  box-shadow: 3px 3px 10px #151515;
 }
 
 .addTaskInput {
   padding: 5px;
   border: 0;
-  box-shadow: 2px 2px 5px #ddd;
+  outline: 0;
+  box-shadow: 2px 2px 5px #151515;
+
+  background-color: #151515;
+
+  color: #fff;
+
+  -webkit-transition: all ease 200ms;
+  -o-transition: all ease 200ms;
+  -moz-transition: all ease 200ms;
+  transition: all ease 200ms;
+}
+
+.addTaskInput:focus {
+  outline: 0;
+  border-bottom: 1px solid #00ffe5;
+  /* box-shadow: 1px 0 2px #00ffe5; */
 }
 
 .addTaskSubmit {
