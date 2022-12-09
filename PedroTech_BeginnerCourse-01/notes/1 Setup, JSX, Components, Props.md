@@ -225,6 +225,8 @@ The `setVariable` function can either take
 1. a value to set the variable to
 2. a callback function to perform an operation on the current value of the variable
 
+_note_: React will not actually update the value of the state until the component re-renders. If you want to do something when a state changes, then consider using the `useEffect` hook.
+
 ## 7.1 Example Uses
 
 The following code automatically updates the paragraph with whatever is written in the input field.
@@ -261,4 +263,78 @@ return (
     {showText && <h1> TEXT TO TOGGLE </h1>}
   </div>
 );
+```
+
+# 8 Lifecycle
+
+The React **_component lifecycle_** describes what happens to React components over the course of their 'lifespan' and consists of three stages:
+
+1. mounting -- the component appears on the UI
+2. updating -- the component is changed (due to different props or state change etc.)
+3. unmounting -- the component disappears from the UI
+
+A component will completely disappear from the HTML code if it is not shown.
+
+# 9 the `useEffect` hook
+
+The `useEffect` hook takes in a callback function that is run when the component is mounted, whenever a prop changes, whenever a state changes.
+
+```jsx
+import { useEffect } from "react";
+...
+function App() {
+  useEffect(() => {
+    // do stuff on component mounting and if any states or props change
+  });
+
+  return <div>HI</div>
+}
+```
+
+We can also pass in an array as the second parameter that specifies which states to watch. If the array is empty, the function will only be called on mounting.
+
+```jsx
+import { useState, useEffect } from "react";
+...
+function App() {
+  const [text, setText] = useState("");
+  useEffect(() => {
+    // do stuff on component mounting and if 'text' state changes
+  }, [text]);
+
+  return <div>HI</div>
+}
+```
+
+The callback function passed in can also return a function, which will be called when the component is unmounted. This is especially useful to abort operations such as fetch requests that might be called in main function.
+
+```jsx
+function App() {
+  const [url, setUrl] = useState("");
+  const [data, setData] = useState();
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(url, { signal: controller.signal })
+      .then(setData)
+      .catch(setError)
+      .finally(() => setLoading(false));
+
+    return () => {
+      controller.abort();
+    };
+  }, [url]);
+}
+```
+
+## 9.1 [aside] React.StrictMode
+
+When our app is placed between `<React.StrictMode>` tags, React will enforce stricter rules. For each component, it will quickly mount, then unmount, then mount the component to test whether it correctly does this without any memory leaks etc.
+
+```jsx
+<React.StrictMode>
+  <App />
+</React.StrictMode>
 ```
