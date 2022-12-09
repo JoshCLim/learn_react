@@ -338,3 +338,341 @@ When our app is placed between `<React.StrictMode>` tags, React will enforce str
   <App />
 </React.StrictMode>
 ```
+
+# 10 React Router DOM
+
+What if we want multiple pages on our website? React loads everything into one `.html` file, so we need a way to render different pages in our website.
+
+We can import from the `react-router-dom` library and use `<Router>`, `<Routes>` and `<Route />` tags. The `<Route />` tag needs a `path` (website url path) and `element` (component that will be rendered on this page).
+
+Depending on the url you are currently on, React will update all the HTML between the `<Routes>` tags to correspond to that particular page. We can therefore also put code outside those tags that will exist on every page (e.g. a navbar).
+
+Additionally, using the `<Link>` tag can allow the creation of a link to a different route.
+
+The `*` path will be rendered if the user is on a url that otherwise is undefined.
+
+```jsx
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+function App() {
+  return (
+    <div className="App">
+      <Router>
+        <nav>
+          <p>THIS IS THE NAVBAR</p>
+          <Link to="/">Home</Link>
+          <Link to="/about">About</Link>
+        </nav>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<PageNotExists />} />
+        </Routes>
+        <footer>THIS IS THE FOOTER</footer>
+      </Router>
+    </div>
+  );
+}
+```
+
+# 11 State Management: context API
+
+We may want our 'child' and 'grandchild' components to have access to states or functions created in the parent component. While it is possible to pass these down via props, it is must better to use contexts instead.
+
+In the parent component, use the `createContext` function to bundle all states and data to pass to other components.
+
+```jsx
+import { createContext } from "react";
+
+export const AppContext = createContext();
+
+function App() {
+  return (
+    <div className="App">
+      <AppContext.Provider value={{ username, setUsername }}>
+        {/* all components inside these tags will have access to the username state and setUsername function */}
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+        </Router>
+      </AppContext.Provider>
+    </div>
+  );
+}
+```
+
+In the child component, use the `useContext` hook to use the data in the imported context.
+
+```jsx
+import { useContext } from "react";
+import { AppContext } from "./App";
+
+function Home() {
+  const { username } = useContext(AppContext);
+  return (
+    <div>
+      <p>username is {username} </p>
+    </div>
+  );
+}
+```
+
+Using contexts helps to avoid **_prop drilling_** where props are passed down deeply into many layers of components without being used in the intermediary components.
+
+# 12 React Query
+
+Previously, we have used the `fetch` API to get data from an API. However, this is not the best practice for React -- using the `useEffect` prop to fetch data is dangerous.
+
+An alternative is `react-query`, installed using
+
+```bash
+npm install @tanstack/react-query
+```
+
+Import react query in the 'highest level' component that will be fetching data from any API (e.g. the parent component).
+
+```jsx
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+function App() {
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false, // do not refetch data upon window focus by default
+      },
+    },
+  });
+
+  return (
+    <div className="App">
+      <QueryClient.Provider>
+        <p>... components / routes etc</p>
+      </QueryClient.Provider>
+    </div>
+  );
+}
+```
+
+Use the `useQuery` hook to fetch data from an API.
+
+```jsx
+import { useQuery } from "@tanstack/react-query";
+import Axios from "axios";
+
+function Home() {
+  const {
+    data: catData,
+    isLoading,
+    isError,
+    refetch: catRefetch,
+  } = useQuery(["cat"], () => {
+    Axiox.get(url).then((res) => res.data);
+  });
+
+  if (isError) {
+    return <p> Sorry, there was an error </p>;
+  }
+
+  if (isLoading) {
+    return <p> Loading... </p>;
+  }
+
+  return (
+    <div className="Home">
+      <p>Fact is {catData?.fact}</p>
+      <button onClick={catRefetch}> Update Data </button>
+    </div>
+  );
+}
+```
+
+# 13 React Forms
+
+For this, we will be using three dependencies: `react-hook-form`, `yup` and `@hookform/resolvers/yup`.
+
+```bash
+npm install react-hook-form yup @hook-form/resolvers
+```
+
+## 13.1 Example Form
+
+```jsx
+import { useForm } from "react-hook-form"; // to handle form submission
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup"; // to handle form validation (checking that inputs are valid)
+
+function Form() {
+  const schema = yup.object().shape({
+    // what should our expected input look like, with the error messages if a criteria fails
+    fullName: yup.string().required("please enter your full name"),
+    email: yup.string().email("invalid email").required("please enter an email"),
+    age: yup.number().positive().integer().min(18).required(),
+    password: yup.string().min(6).max(20).required(),
+    passwordConfirm: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "passwords don't match")
+      .required(),
+  });
+
+  const { register, handleSubmit, formState: {errors} } = useForm({
+    resolver: yupResolver(schema);
+  });
+
+
+  const onSubmit = (data) => {
+    console.table(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input type="text" placeholder="Name..." {...register("fullName")} />
+      <p>{errors.fullName?.message}</p>
+      <input type="text" placeholder="Email..." {...register("email")} />
+      <p>{errors.email?.message}</p>
+      <input type="number" placeholder="Age..." {...register("age")} />
+      <input
+        type="password"
+        placeholder="Password..."
+        {...register("password")}
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password..."
+        {...register("passwordConfirm")}
+      />
+      <input type="submit" />
+    </form>
+  );
+}
+```
+
+# 14 Custom Hooks
+
+A **_hook_** is a function that abstract a lot of logic in React.
+
+Properties of hooks:
+
+1. they are all functions
+2. they start with a lowercase 'use'
+3. only can be called inside a React component
+4. cannot be called inside other functions -- must be in the 'highest level' of a component
+
+## 14.1 Example: creating a `useToggle()` hook
+
+```jsx
+import { useState } from "react";
+
+function useToggle(initialState = false) {
+  const [state, setState] = useState(initialState);
+
+  const toggle = () => {
+    setState((prev) => !prev);
+  };
+
+  return [state, toggle];
+}
+
+export { useToggle };
+```
+
+## 14.2 Example: creating a `useGetCat()` hook
+
+```jsx
+import { useQuery } from "@tanstack/react-query";
+import Axios from "axios";
+
+export const useGetCat = () => {
+  const {
+    data,
+    refetch,
+    isLoading: isCatLoading,
+  } = useQuery(["cat"], async () => {
+    return Axios.get(url).then((res) => res.data);
+  });
+
+  const refetchData = () => {
+    alert("data refetched");
+    refetch();
+  };
+
+  return { data, refetchData, isCatLoading };
+};
+```
+
+# 15 Typesafety: `typescript`
+
+Specifying the types of props and other data help us to avoid our websites crashing due to type issues.
+
+Our solution: `typescript`.
+
+```
+npx create-react-app <directory> --template typescript
+```
+
+Files with components use the `.tsx` file extension, every other TypeScript file can use a `.ts` extension.
+
+Create an `interface` to defined object types.
+
+```tsx
+interface Person {
+  name: string;
+  email: string;
+  age: number;
+  isMarried: boolean;
+  friends: string[];
+  country?: string; // optional field
+}
+```
+
+Specify the type of a state from `useState`.
+
+```tsx
+const [name, setName] = useState<string>("");
+```
+
+Use an `enum` to create a type of value that can only be a certain number of limited options.
+
+```tsx
+enum Country {
+  Brazil = "Brazil",
+  Canada = "Canada",
+  France = "France",
+}
+const c: Country = Country.Brazil;
+```
+
+Specify the return type of a function.
+
+```tsx
+const getAge = (name: string): number => {
+  return 99;
+};
+```
+
+# 16 Redux Toolkit
+
+Similar to the State Management (context API) section.
+
+```
+npm install @reduxjs/toolkit react-redux
+```
+
+## 16.1 Example
+
+inside `store.ts`
+
+```tsx
+import { configureStore } from "@reduxjs/toolkit";
+
+export const store = configureStore({});
+```
+
+inside `App.tsx`
+
+```tsx
+import { Provider } from "react-redux";
+
+function App() {}
+```
