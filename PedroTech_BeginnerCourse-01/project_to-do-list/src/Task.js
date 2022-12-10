@@ -13,6 +13,7 @@ export const Task = ({
       className="Task"
       style={{
         textDecoration: complete ? "line-through" : "none",
+        color: complete ? "green" : "white",
       }}
     >
       <p className="taskName">{name}</p>

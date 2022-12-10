@@ -1,3 +1,10 @@
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background-color: inherit;
+}
+
 .App {
   height: 100vh;
   width: 100vw;
@@ -20,19 +27,21 @@
   width: 40%;
 }
 
-.addTask {
+.addTaskWrapper {
   margin: 30px 0;
   padding: 40px 0;
-  font-size: 24px;
-  border-radius: 20px;
+  font-size: 32px;
+  border-radius: 30px;
   box-shadow: 3px 3px 10px #151515;
+  background-color: inherit;
+  border: 1px solid #00ffe5;
 }
 
 .addTaskInput {
   padding: 5px;
   border: 0;
   outline: 0;
-  box-shadow: 2px 2px 5px #151515;
+  /* box-shadow: 2px 2px 5px #151515; */
 
   background-color: #151515;
 
@@ -51,5 +60,10 @@
 }
 
 .addTaskSubmit {
-  padding: 5px;
+  width: 28px;
+  height: 28px;
+  background-color: #00ffe5;
+  border: 1px solid #00ffe5;
+
+  cursor: pointer;
 }

@@ -1,29 +1,26 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 import { Task } from "./Task";
 
 function App() {
   const [tasks, setTasks] = useState([]); // keep track of tasks
-  const [newTask, setNewTask] = useState(""); // keep track of input value
-
-  // handle user typing in input field
-  const handleChange = (event) => {
-    setNewTask(event.target.value);
-  };
+  // const [newTask, setNewTask] = useState(""); // keep track of input value
+  const addTaskInputRef = useRef(null);
 
   // add a task to tasks[] with name {newTask}
   const addTask = () => {
+    if (addTaskInputRef.current.value.trim().length === 0) return;
     setTasks([
       ...tasks,
       {
         id: newTaskId(),
-        name: newTask,
+        name: addTaskInputRef.current.value,
         complete: false,
         importance: 0,
       },
     ]);
-    setNewTask("");
+    addTaskInputRef.current.value = "";
   };
 
   // generate a new unique task id
@@ -31,7 +28,7 @@ function App() {
     if (tasks.length === 0) {
       return 1;
     } else {
-      return tasks[0].id + 1;
+      return Math.max(...tasks.map((value) => value.id)) + 1;
     }
   };
 
@@ -60,7 +57,7 @@ function App() {
             className="addTaskInput"
             placeholder="new todo"
             type="text"
-            onChange={handleChange}
+            ref={addTaskInputRef}
           />
           <button className="addTaskSubmit" onClick={addTask}>
             +
