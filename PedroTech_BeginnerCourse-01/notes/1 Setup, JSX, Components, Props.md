@@ -661,18 +661,84 @@ npm install @reduxjs/toolkit react-redux
 
 ## 16.1 Example
 
+We firstly need a store -- a place to store all of the global states inside our application. We also need a provider -- a component that wraps around all of the components that we need to have access to the states.
+
 inside `store.ts`
 
 ```tsx
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-export const store = configureStore({});
+const initialState = { value: { username: "" } };
+
+const userSlice = createSlice({
+  name: "user",
+  initialState: initialState,
+  reducers: {
+    login: (state, action) => {
+      state.value = action.payload;
+    },
+    logout: (state) => {
+      state.value = initialState.value;
+    },
+  },
+});
+
+export const {} = userSlice.actions;
+
+// creates a store
+export const store = configureStore({
+  reducer: {
+    user: userSlice.reducer,
+  },
+});
 ```
 
 inside `App.tsx`
 
 ```tsx
 import { Provider } from "react-redux";
+import { store } from "./store";
 
-function App() {}
+function App() {
+  return (
+    <div className="App">
+      <Provider store={store}>
+        <Router>...</Router>
+      </Provider>
+    </div>
+  );
+}
+```
+
+inside `Login.tsx`
+
+```tsx
+import { useState } from "react";
+import { login, logout } from "store";
+import { useDispatch, useSelector } from "react-redux";
+// useDispatch = for modifying states
+// useSelector = for getting state value
+
+export const Login = () => {
+  const [newUsername, setNewUsername] = useState("");
+
+  const dispatch = useDispatch();
+  const username = useSelector((state: any) => state.user.value.username);
+
+  return (
+    <div className="Login">
+      THIS IS THE LOGIN PAGE
+      <p>username is {username}</p>
+      <input
+        onChange={(e) => {
+          setNewUsername(e.target.value);
+        }}
+      />
+      <button onClick={() => dispatch(login({ username: newUsername }))}>
+        Submit Login
+      </button>
+      <button onClick={() => dispatch(logout())}>Logout</button>
+    </div>
+  );
+};
 ```
