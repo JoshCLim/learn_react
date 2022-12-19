@@ -3,6 +3,8 @@ import { auth } from "../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 
+import "./navbar.css";
+
 function Navbar() {
   const [user] = useAuthState(auth);
 
@@ -11,23 +13,37 @@ function Navbar() {
   };
 
   return (
-    <div>
-      <div>
-        <Link to="/"> Home </Link>
-        {!user && <Link to="/login"> Login </Link>}
-        {user && <Link to="/createpost"> Post </Link>}
+    <div className="Navbar">
+      <div className="NavbarLinks">
+        <Link to="/" className="NavbarLink">
+          Home
+        </Link>
+        {!user && (
+          <Link to="/login" className="NavbarLink">
+            Login
+          </Link>
+        )}
+        {user && (
+          <Link to="/createpost" className="NavbarLink">
+            Post
+          </Link>
+        )}
       </div>
-
-      <div>
+      <div className="Divider"></div>
+      <div className="NavbarUser">
         {user && (
           <>
-            <p>{user?.displayName}</p>
+            <p className="NavbarUserName">{user?.displayName}</p>
             <img
+              className="NavbarUserImage"
               src={user?.photoURL || "default.png"}
-              width="20"
+              width="40"
+              height="40"
               alt="profile pic"
             />
-            <button onClick={signUserOut}>Logout</button>
+            <button className="NavbarLogout" onClick={signUserOut}>
+              Logout
+            </button>
           </>
         )}
       </div>

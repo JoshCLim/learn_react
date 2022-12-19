@@ -12,6 +12,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 import { auth, db } from "../../config/firebase";
 import { Post as PostType } from "./main";
+import { IconThumbsDown, IconThumbsUp } from "./postIcons";
 
 interface Props {
   post: PostType;
@@ -95,7 +96,15 @@ function Post(props: Props) {
       <div className="footer">
         <p>@{post.username}</p>
         <button onClick={hasUserLiked ? removeLike : addLike}>
-          {hasUserLiked ? <>&#128078;</> : <>&#128077;</>}
+          {hasUserLiked ? (
+            <>
+              <IconThumbsDown />
+            </>
+          ) : (
+            <>
+              <IconThumbsUp />
+            </>
+          )}
         </button>
         <p>Likes: {likes && likes?.length}</p>
       </div>
