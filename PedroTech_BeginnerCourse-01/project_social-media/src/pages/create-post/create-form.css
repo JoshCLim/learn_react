@@ -1,0 +1,82 @@
+.CreateForm {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  text-transform: lowercase;
+
+  height: calc(100vh - 40px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.CreateForm input,
+.CreateForm textarea {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.CreateForm input:focus,
+.CreateForm textarea:focus {
+  outline: 0;
+  border-color: rgb(19, 105, 73);
+}
+
+.CreateFormInputTitle {
+  min-width: 50%;
+
+  padding: 10px 15px;
+
+  font-size: 20px;
+
+  border: 0;
+  border-bottom: 1px #000 solid;
+
+  transition: all ease 200ms;
+}
+
+.CreateFormInputDescription {
+  min-width: 50%;
+  min-height: 200px;
+
+  padding: 15px;
+
+  font-size: 20px;
+  /* border: 0; */
+  border: 1px #000 solid;
+  border-radius: 8px;
+
+  transition: all ease 200ms;
+}
+
+.CreateFormInputDescription:focus {
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+
+  border-top-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+}
+
+.CreateFormErrorMessage {
+  color: #a70000;
+}
+
+.CreateFormSubmit {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
+  border: 0;
+  border-radius: 8px;
+
+  padding: 20px;
+
+  cursor: pointer;
+
+  transition: all ease 200ms;
+}
+
+.CreateFormSubmit:hover {
+  border-radius: 20px;
+  background-color: aqua;
+}

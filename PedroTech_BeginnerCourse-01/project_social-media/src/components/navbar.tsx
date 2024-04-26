@@ -29,10 +29,10 @@ function Navbar() {
           </Link>
         )}
       </div>
-      <div className="Divider"></div>
       <div className="NavbarUser">
         {user && (
           <>
+            <div className="Divider"></div>
             <p className="NavbarUserName">{user?.displayName}</p>
             <img
               className="NavbarUserImage"

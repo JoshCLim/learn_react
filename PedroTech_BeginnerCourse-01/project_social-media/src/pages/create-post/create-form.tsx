@@ -8,6 +8,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 import { useNavigate } from "react-router-dom";
 
+import "./create-form.css";
+
 interface CreateFormData {
   title: string;
   description: string;
@@ -42,12 +44,23 @@ function CreateForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onCreatePost)}>
-      <input type="text" placeholder="title" {...register("title")} />
-      <p>{errors.title?.message}</p>
-      <textarea placeholder="description" {...register("description")} />
-      <p>{errors.description?.message}</p>
-      <input type="submit" />
+    <form onSubmit={handleSubmit(onCreatePost)} className="CreateForm">
+      <h1>Share your thoughts.</h1>
+      <hr />
+      <input
+        type="text"
+        placeholder="title"
+        {...register("title")}
+        className="CreateFormInputTitle"
+      />
+      <p className="CreateFormErrorMessage">{errors.title?.message}</p>
+      <textarea
+        placeholder="content"
+        {...register("description")}
+        className="CreateFormInputDescription"
+      />
+      <p className="CreateFormErrorMessage">{errors.description?.message}</p>
+      <input type="submit" className="CreateFormSubmit" />
     </form>
   );
 }
