@@ -1,0 +1,59 @@
+.Navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+
+  box-shadow: 0 0 3px #eee;
+}
+
+.Divider {
+  border: 1px solid #222;
+  height: 25px;
+  margin: 0 5px;
+}
+
+.NavbarLinks {
+  display: flex;
+}
+
+.NavbarLink {
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #222;
+
+  transition: 200ms ease all;
+}
+
+.NavbarLink:hover {
+  filter: brightness(50%);
+  color: #cacaca;
+  text-decoration: underline;
+}
+
+.NavbarUser {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.NavbarUserName {
+  margin: 0 15px;
+}
+
+.NavbarLogout {
+  border: 0;
+  background-color: #eee;
+
+  height: 40px;
+
+  padding: 10px 15px;
+
+  cursor: pointer;
+
+  transition: 200ms ease all;
+}
+
+.NavbarLogout:hover {
+  filter: brightness(90%);
+}

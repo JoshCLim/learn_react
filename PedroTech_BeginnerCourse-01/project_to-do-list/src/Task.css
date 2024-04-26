@@ -1,0 +1,35 @@
+p {
+  margin: 0;
+}
+
+button {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: inherit;
+}
+
+.Task {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 20px;
+
+  background-color: #151515;
+}
+
+.taskActionsWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.DeleteButton {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.CompleteButton {
+  cursor: pointer;
+}
